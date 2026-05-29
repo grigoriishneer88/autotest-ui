@@ -32,4 +32,7 @@ def test_wrong_email_or_password(chromium_page: Page):
     expect(wrong_email_or_password).to_have_text("Wrong email or password")
 
 
-
+def test_sign_in(chromium_page_with_state: Page):
+    chromium_page_with_state.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard")
+    dashboard_title = chromium_page_with_state.get_by_test_id("dashboard-toolbar-title-text")
+    expect(dashboard_title).to_be_visible()
