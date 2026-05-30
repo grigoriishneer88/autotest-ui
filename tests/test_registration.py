@@ -1,6 +1,8 @@
 from playwright.sync_api import sync_playwright, expect, Page
 import pytest
 
+from pages.login_page import LoginPage
+
 
 @pytest.mark.regression
 @pytest.mark.registration
@@ -17,19 +19,32 @@ def test_successful_registration(chromium_page: Page):
         dashboard_title = chromium_page.get_by_test_id("dashboard-toolbar-title-text")
         expect(dashboard_title).to_be_visible()
 
+
+
 @pytest.mark.regression
 @pytest.mark.authorisation
-def test_wrong_email_or_password(chromium_page: Page):
-    chromium_page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/login")
-    email_field = chromium_page.locator('//*[@id=":r0:"]')
-    email_field.fill('user.name@gmail.com')
-    password_field = chromium_page.locator('//*[@id=":r1:"]')
-    password_field.fill('password')
-    login_button = chromium_page.locator('//*[@id="login-page-login-button"]')
-    login_button.click()
-    wrong_email_or_password = chromium_page.locator('//*[@id="root"]/div/div/div/div[2]/div[1]/div[2]')
-    expect(wrong_email_or_password).to_be_visible()
-    expect(wrong_email_or_password).to_have_text("Wrong email or password")
+@pytest.mark.parametrize('email, password', [
+    ('email1', 'password'),
+    ('email2', 'password1'),
+    ('email3', 'password2'),
+    ('email4', 'password3'),
+])
+def test_wrong_email_or_password(login_page: LoginPage, email: str, password: str):
+    #login_page = LoginPage(page=chromium_page)
+
+    login_page.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/login")
+    login_page.fill_login_form(email, password)
+    login_page.click_login_button()
+    login_page.check_wrong_email_or_password_alert()
+    # email_field = chromium_page.locator('//*[@id=":r0:"]')
+    # email_field.fill('user.name@gmail.com')
+    # password_field = chromium_page.locator('//*[@id=":r1:"]')
+    # password_field.fill('password')
+    # login_button = chromium_page.locator('//*[@id="login-page-login-button"]')
+    # login_button.click()
+    # wrong_email_or_password = chromium_page.locator('//*[@id="root"]/div/div/div/div[2]/div[1]/div[2]')
+    # expect(wrong_email_or_password).to_be_visible()
+    # expect(wrong_email_or_password).to_have_text("Wrong email or password")
 
 
 def test_sign_in(chromium_page_with_state: Page):
