@@ -15,7 +15,7 @@ with sync_playwright() as playwright:
     name_field.fill("test2")
     password_field.fill("test2")
     registration_button.click()
-    context.storage_state(path = 'browser-state.json')
+    context.storage_state(path ='../browser-state.json')
     page.wait_for_timeout(4000)
 
 with sync_playwright() as playwright:

@@ -1,11 +1,13 @@
 from playwright.sync_api import sync_playwright, expect, Page
 import pytest
 
+from pages.dashboard_page import DashboardPage
 from pages.login_page import LoginPage
 
 
 @pytest.mark.regression
 @pytest.mark.registration
+@pytest.mark.already_signed_in
 def test_successful_registration(chromium_page: Page):
         chromium_page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration")
         email_field = chromium_page.get_by_test_id("registration-form-email-input").locator('input')
@@ -46,8 +48,10 @@ def test_wrong_email_or_password(login_page: LoginPage, email: str, password: st
     # expect(wrong_email_or_password).to_be_visible()
     # expect(wrong_email_or_password).to_have_text("Wrong email or password")
 
-
-def test_sign_in(chromium_page_with_state: Page):
-    chromium_page_with_state.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard")
-    dashboard_title = chromium_page_with_state.get_by_test_id("dashboard-toolbar-title-text")
-    expect(dashboard_title).to_be_visible()
+@pytest.mark.already_signed_in
+def test_sign_in(dashboard_page_with_state: DashboardPage):
+    dashboard_page_with_state.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard")
+    dashboard_page_with_state.check_dashboard_title_visibility()
+    # chromium_page_with_state.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard")
+    # dashboard_title = chromium_page_with_state.get_by_test_id("dashboard-toolbar-title-text")
+    # expect(dashboard_title).to_be_visible()
