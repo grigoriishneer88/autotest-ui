@@ -1,0 +1,22 @@
+from re import Pattern
+
+from playwright.sync_api import Page, expect
+from components.base_component import BaseComponent
+
+class SideBarListItemComponent(BaseComponent):
+    def __init__(self, page: Page, identifier : str):
+        super().__init__(page)
+
+        self.icon = page.get_by_test_id(f'{identifier}-drawer-list-item-button-icon')
+        self.title = page.get_by_test_id(f'{identifier}-list-item-title-text')
+        self.button = page.get_by_test_id(f'{identifier}-list-item-button')
+
+    def check_visible(self, title:str):
+        expect(self.title).to_be_visible()
+        expect(self.icon).to_be_visible()
+        expect(self.button).to_have_text(title)
+        expect(self.button).to_be_visible()
+
+    def navigate(self, url:Pattern[str]):
+        self.button.click()
+        self.check_current_url(url)

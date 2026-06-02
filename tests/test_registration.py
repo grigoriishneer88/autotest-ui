@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright, expect, Page
 import pytest
 
+from fixtures.pages import dashboard_page
 from pages.dashboard_page import DashboardPage
 from pages.login_page import LoginPage
 
@@ -8,7 +9,7 @@ from pages.login_page import LoginPage
 @pytest.mark.regression
 @pytest.mark.registration
 @pytest.mark.already_signed_in
-def test_successful_registration(chromium_page: Page):
+def test_successful_registration(chromium_page: Page, dashboard_page: DashboardPage):
         chromium_page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration")
         email_field = chromium_page.get_by_test_id("registration-form-email-input").locator('input')
         name_field = chromium_page.get_by_test_id("registration-form-username-input").locator('input')
@@ -18,8 +19,7 @@ def test_successful_registration(chromium_page: Page):
         name_field.fill("test2")
         password_field.fill("test2")
         registration_button.click()
-        dashboard_title = chromium_page.get_by_test_id("dashboard-toolbar-title-text")
-        expect(dashboard_title).to_be_visible()
+        dashboard_page.check_dashboard_title_visibility()
 
 
 

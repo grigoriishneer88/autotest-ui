@@ -1,7 +1,7 @@
 from playwright.sync_api import Page, expect
 from typing import Pattern
 
-class BaseComponent():
+class BaseComponent:
     def __init__(self, page: Page):
         self.page = page
 

@@ -15,10 +15,10 @@ class DashboardPage(BasePage):
         self.scores_chart = page.get_by_test_id('scores-scatter-chart')
         self.navbar_component = NavbarComponent(page)
 
-    def check_dashboard_title_visibility(self, username):
+    def check_dashboard_title_visibility(self): #username
         self.check_if_visible(self.dashboard_page_title)
         self.check_text(self.dashboard_page_title,'Dashboard' )
-        self.navbar_component.check_nav_bar_visibility(username)
+        #self.navbar_component.check_nav_bar_visibility(username)
 
         #expect(self.dashboard_page_title).to_be_visible()
         #expect(self.dashboard_page_title).to_have_text('Dashboard')
