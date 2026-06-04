@@ -1,7 +1,7 @@
 import pytest
 from playwright.sync_api import Page
 
-from pages.cources_list_page import CoursesPage
+from pages.courses_list_page import CoursesPage
 from pages.create_course_page import CreateCoursePage
 from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
