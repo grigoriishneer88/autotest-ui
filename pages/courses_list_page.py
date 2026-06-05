@@ -1,4 +1,6 @@
 from components.courses.cource_view_component import CourseViewComponent
+from components.courses.courses_list_toolbar_view_component import CoursesListToolbarViewComponent
+from components.navigation.navbar_component import NavbarComponent
 from components.views.empty_view_component import EmptyViewComponent
 from pages.base_page import BasePage
 from playwright.sync_api import Page, expect
@@ -9,8 +11,10 @@ class CoursesPage(BasePage):
         super().__init__(page)
         self.course_view = CourseViewComponent(page)
         self.empty_view = EmptyViewComponent(page,'courses-list')
-        self.courses_title = page.get_by_test_id('courses-list-toolbar-title-text')
-        self.create_course_button = page.get_by_test_id('courses-list-toolbar-create-course-button')
+        self.toolbar_view_component = CoursesListToolbarViewComponent(page)
+        self.navbar_component = NavbarComponent(page)
+        # self.courses_title = page.get_by_test_id('courses-list-toolbar-title-text')
+        # self.create_course_button = page.get_by_test_id('courses-list-toolbar-create-course-button')
         # self.empty_view_icon = page.get_by_test_id('courses-list-empty-view-icon')
         # self.empty_view_title = page.get_by_test_id('courses-list-empty-view-title-text')
         # self.empty_view_description = page.get_by_test_id('courses-list-empty-view-description-text')
@@ -24,12 +28,13 @@ class CoursesPage(BasePage):
         # self.course_edit_button = page.get_by_test_id('course-view-edit-menu-item-icon')
         # self.course_delete_button = page.get_by_test_id('course-view-edit-menu-item-icon')
 
-    def check_courses_title_visibility(self):
-        self.check_if_visible(self.courses_title)
-        self.check_text(self.courses_title,'Courses')
-
-    def check_create_course_button_visibility(self):
-        self.check_if_visible(self.create_course_button)
+    # def check_courses_title_visibility(self):
+    #
+    #     self.check_if_visible(self.courses_title)
+    #     self.check_text(self.courses_title,'Courses')
+    #
+    # def check_create_course_button_visibility(self):
+    #     self.check_if_visible(self.create_course_button)
 
     def check_empty_view_visibility(self):
         self.empty_view.check_visible(title = "There is no results",
@@ -40,9 +45,9 @@ class CoursesPage(BasePage):
         # self.check_text(self.empty_view_title, 'There is no results')
         # self.check_if_visible(self.empty_view_description)
         # self.check_text(self.empty_view_description, 'Results from the load test pipeline will be displayed here')
-
-    def click_create_course_button(self, title):
-        self.create_course_button.click()
+    #
+    # def click_create_course_button(self, title):
+    #     self.create_course_button.click()
 
     # def check_course_card_visibility_by_index(self, index, title, max_score, min_score, estimated_time):
     #     expect(self.course_image.nth(index)).to_be_visible()
