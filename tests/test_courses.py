@@ -20,8 +20,10 @@ def test_add_course(create_course_page:CreateCoursePage, courses_list_page: Cour
         '11',
         '2'
     )
-    create_course_page.upload_preview_image('/Users/grigorii/PycharmProjects/autotests1/test_data/Image_created_with_a_mobile_phone.png')
-    create_course_page.check_upload_image_view_visibility(is_image_uploaded=True)
+    create_course_page.upload_image_widget.check_visible(is_image_uploaded=False)
+
+    create_course_page.upload_image_widget.upload_preview_image('/Users/grigorii/PycharmProjects/autotests1/test_data/Image_created_with_a_mobile_phone.png')
+    create_course_page.upload_image_widget.check_visible(is_image_uploaded=True)
     create_course_page.click_create_course_button()
     courses_list_page.toolbar_view_component.check_create_course_button_visibility()
     courses_list_page.toolbar_view_component.check_courses_title_visibility()
