@@ -1,6 +1,6 @@
 from components.base_component import BaseComponent
 from playwright.sync_api import Page, expect
-
+from elements.button import Button
 
 class CourseMenuViewComponent(BaseComponent):
     def __init__(self,page: Page):
