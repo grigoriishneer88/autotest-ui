@@ -18,7 +18,7 @@ def test_successful_registration(chromium_page: Page, dashboard_page: DashboardP
         registration_page.visit_registration_page()
         registration_page.registration_form_component.fill_form(email, username, password)
         registration_page.click_registration_button()
-        dashboard_page.check_dashboard_title_visibility()
+        dashboard_page.dashboard_toolbar_view_component.check_visible()
 
 
 
@@ -41,4 +41,4 @@ def test_wrong_email_or_password(login_page: LoginPage, email: str, password: st
 @pytest.mark.already_signed_in
 def test_sign_in(dashboard_page_with_state: DashboardPage):
     dashboard_page_with_state.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard")
-    dashboard_page_with_state.check_dashboard_title_visibility()
+    dashboard_page_with_state.dashboard_toolbar_view_component()
