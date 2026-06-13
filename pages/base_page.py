@@ -1,3 +1,5 @@
+from re import Pattern
+
 from playwright.sync_api import Page, expect
 
 
@@ -16,3 +18,6 @@ class BasePage:
 
     def check_text(self, element, text):
         expect(element).to_have_text(text)
+
+    def check_current_url(self, expected_url: Pattern[str]):
+        expect(self.page).to_have_url(expected_url)
