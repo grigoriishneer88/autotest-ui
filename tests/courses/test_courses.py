@@ -2,6 +2,9 @@ import allure
 import pytest
 from pages.courses.courses_list_page import CoursesPage
 from pages.courses.create_course_page import CreateCoursePage
+from tools.allure.parent_suites import AllureParentSuite
+from tools.allure.sub_suite import AllureSubSuite
+from tools.allure.suites import AllureSuite
 from tools.allure.tags import AllureTags
 from tools.allure.epics import AllureEpic
 from tools.allure.stories import AllureStories
@@ -14,6 +17,9 @@ from allure_commons.types import Severity
 @allure.epic(AllureEpic.LMS.value)
 @allure.feature(AllureFeature.COURSES.value)
 @allure.story(AllureStories.COURSES.value)
+@allure.parent_suite(AllureParentSuite.LMS.value)
+@allure.suite(AllureSuite.COURSES.value)
+@allure.sub_suite(AllureSubSuite.COURSES.value)
 class TestCourses:
     @allure.severity(Severity.CRITICAL)
     @allure.title("Create new course")

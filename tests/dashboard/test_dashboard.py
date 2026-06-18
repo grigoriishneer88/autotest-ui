@@ -3,6 +3,9 @@ import pytest
 from allure_commons.types import Severity
 
 from pages.dashboard.dashboard_page import DashboardPage
+from tools.allure.parent_suites import AllureParentSuite
+from tools.allure.sub_suite import AllureSubSuite
+from tools.allure.suites import AllureSuite
 from tools.allure.tags import AllureTags
 from tools.allure.epics import AllureEpic
 from tools.allure.stories import AllureStories
@@ -14,6 +17,9 @@ from tools.allure.features import AllureFeature
 @allure.epic(AllureEpic.LMS.value)
 @allure.feature(AllureFeature.DASHBOARD.value)
 @allure.story(AllureStories.DASHBOARD.value)
+@allure.parent_suite(AllureParentSuite.LMS.value)
+@allure.suite(AllureSuite.DASHBOARD.value)
+@allure.sub_suite(AllureSubSuite.DASHBOARD.value)
 class TestDashboard:
     @allure.severity(Severity.NORMAL)
     @allure.title("Dashboard can be viewed for Signed in User")

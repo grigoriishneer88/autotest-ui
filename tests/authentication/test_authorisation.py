@@ -5,12 +5,18 @@ import allure
 from pages.authentication.registration_page import RegistrationPage
 from pages.dashboard.dashboard_page import DashboardPage
 from pages.authentication.login_page import LoginPage
+from tools.allure.parent_suites import AllureParentSuite
+from tools.allure.sub_suite import AllureSubSuite
+from tools.allure.suites import AllureSuite
 from tools.allure.tags import AllureTags
 from tools.allure.epics import AllureEpic
 from tools.allure.stories import AllureStories
 from tools.allure.features import AllureFeature
 
 
+@allure.parent_suite(AllureParentSuite.LMS.value)
+@allure.suite(AllureSuite.AUTHENTICATION.value)
+@allure.sub_suite(AllureSubSuite.AUTHORISATION.value)
 @pytest.mark.regression
 @pytest.mark.registration
 @pytest.mark.already_signed_in

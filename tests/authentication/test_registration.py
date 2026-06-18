@@ -3,6 +3,9 @@ import pytest
 from playwright.sync_api import Page
 from pages.authentication.registration_page import RegistrationPage
 from pages.dashboard.dashboard_page import DashboardPage
+from tools.allure.parent_suites import AllureParentSuite
+from tools.allure.sub_suite import AllureSubSuite
+from tools.allure.suites import AllureSuite
 from tools.allure.tags import AllureTags
 from tools.allure.epics import AllureEpic
 from tools.allure.stories import AllureStories
@@ -12,8 +15,11 @@ from allure_commons.types import Severity
 @pytest.mark.regression
 @pytest.mark.registration
 @allure.epic(AllureEpic.LMS.value)
+@allure.parent_suite(AllureParentSuite.LMS.value)
 @allure.feature(AllureFeature.AUTHENTICATION.value)
+@allure.suite(AllureSuite.AUTHENTICATION.value)
 @allure.story(AllureStories.REGISTRATION.value)
+@allure.sub_suite(AllureSubSuite.REGISTRATION.value)
 class TestRegistration:
     @pytest.mark.parametrize(
         "email, password, username",  # 1. Имена переменных одной строкой через запятую

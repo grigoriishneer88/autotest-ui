@@ -1,0 +1,9 @@
+import allure
+
+def test_feature():
+    with allure.step('opening browser'):
+        ...
+    with allure.step('checking that button is visible'):
+        ...
+    with allure.step('closing browser'):
+        ...
