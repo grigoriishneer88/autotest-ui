@@ -39,7 +39,7 @@ class TestCourses:
         create_course_page.upload_image_widget.check_visible(is_image_uploaded=False)
 
         create_course_page.upload_image_widget.upload_preview_image(
-            '/Users/grigorii/PycharmProjects/autotests1/test_data/Image_created_with_a_mobile_phone.png')
+            '/Users/grigorii/PycharmProjects/autotests1/testdata/files/image.png')
         create_course_page.upload_image_widget.check_visible(is_image_uploaded=True)
         create_course_page.create_course_toolbar_view_component.click_create_course_button()
         courses_list_page.toolbar_view_component.check_create_course_button_visibility()
@@ -76,7 +76,7 @@ class TestCourses:
         course_max_score = '89'
         course_min_score = '56'
         create_course_page.create_course_form_component.fill(title = course_title, estimated = course_estimated, description = course_description, max_score = course_max_score, min_score = course_min_score)
-        create_course_page.upload_image_widget.upload_preview_image('/Users/grigorii/PycharmProjects/autotests1/test_data/Image_created_with_a_mobile_phone.png')
+        create_course_page.upload_image_widget.upload_preview_image('/Users/grigorii/PycharmProjects/autotests1/testdata/files/image.png')
         create_course_page.create_course_toolbar_view_component.click_create_course_button()
         courses_list_page.course_view.check_visible(index= 0, title = course_title, max_score = course_max_score, min_score=course_min_score, estimated_time=course_estimated)
         courses_list_page.course_view.menu.click_edit(index=0)

@@ -2,14 +2,19 @@ import allure
 import pytest
 from _pytest.fixtures import SubRequest
 from playwright.sync_api import Playwright, Page
+from config import settings
 
 def initialize_playwright_page(playwright:Playwright, test_name:str, storage_stage:str | None):
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context(storage_state=storage_stage, record_video_dir='.videos')
+#    print(f"DEBUG: Available settings attributes: {dir(settings)}")
+    browser = playwright.chromium.launch(headless=settings.headless)
+    context = browser.new_context(storage_state=storage_stage, record_video_dir=settings.videos_dir)
     context.tracing.start(screenshots=True, snapshots=True, sources=True)
     page = context.new_page()
     yield page
-    context.tracing.stop(path=f'./tracing/{test_name}.zip')
+    trace_file = settings.tracing_dir.joinpath(f'{test_name}.zip')
+    context.tracing.stop(path=trace_file)
     browser.close()
-    allure.attach.file(f'./tracing/{test_name}.zip', name="trace", attachment_type=allure.attachment_type.ZIP)
-    allure.attach.file(page.video.path(), name='video', attachment_type=allure.attachment_type.WEBM)
+    allure.attach.file(str(trace_file), name="trace", attachment_type=allure.attachment_type.ZIP)
+    video_path = page.video.path()
+    if video_path:
+        allure.attach.file(video_path, name='video', attachment_type=allure.attachment_type.WEBM)
