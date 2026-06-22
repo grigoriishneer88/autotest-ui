@@ -6,6 +6,7 @@ from components.authentication.registration_form_component import RegistrationFo
 from elements.button import Button
 from elements.link import Link
 from pages.base_page import BasePage
+from tools.routes import AppRoute
 
 
 class RegistrationPage(BasePage):
@@ -19,9 +20,9 @@ class RegistrationPage(BasePage):
         self.registration_button.click()
 
     def visit_registration_page(self):
-        self.page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration")
+        self.page.goto(AppRoute.REGISTRATION)
 
     def click_login_link(self):
         self.login_link.click()
-        self.check_current_url(re.compile('.*#/auth/login'))
+        self.check_current_url(re.compile(AppRoute.LOGIN))
 

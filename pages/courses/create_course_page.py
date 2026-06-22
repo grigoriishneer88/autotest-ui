@@ -7,6 +7,8 @@ from components.courses.create_course_toolbar_view_component import CreateCourse
 from components.views.empty_view_component import EmptyViewComponent
 from components.views.image_upload_widget_component import ImageUploadWidgetComponent
 from pages.base_page import BasePage
+from tools.routes import AppRoute
+
 
 class CreateCoursePage(BasePage):
     def __init__(self, page: Page):
@@ -28,7 +30,7 @@ class CreateCoursePage(BasePage):
         # self.exercises_title = page.get_by_test_id('create-course-exercises-box-toolbar-title-text')
 
     def visit_create_course_page(self):
-        self.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/courses/create")
+        self.visit(AppRoute.CREATE_COURSE)
 
     # def check_course_title_visibility(self):
     #     self.exercises_title.is_visible()

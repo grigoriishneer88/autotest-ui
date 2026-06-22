@@ -9,11 +9,11 @@ class BasePage:
 
     def visit(self,url:str):
         with allure.step(f'Opening URL {url}'):
-            self.page.goto(url, wait_until="networkidle")
+            self.page.goto(url, wait_until="load")
 
     def reload(self):
         with allure.step(f'Reloading the page {self.page.url}'):
-            self.page.reload(wait_until="networkidle")
+            self.page.reload(wait_until="load")
 
     def check_if_visible(self, element):
         expect(element).to_be_visible()

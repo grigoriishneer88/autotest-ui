@@ -33,7 +33,7 @@ class TestRegistration:
     @allure.title("Register with email and password")
     @allure.tag(AllureTags.REGISTRATION.value, AllureTags.REGISTRATION.value)
     @allure.severity(Severity.CRITICAL)
-    def test_successful_registration(self, chromium_page: Page, dashboard_page: DashboardPage, registration_page: RegistrationPage, email:str, username:str, password:str):
+    def test_successful_registration(self, page: Page, dashboard_page: DashboardPage, registration_page: RegistrationPage, email:str, username:str, password:str):
             registration_page.visit_registration_page()
             registration_page.registration_form_component.fill_form(email, username, password)
             registration_page.click_registration_button()

@@ -47,4 +47,7 @@ class Settings(BaseSettings):
 
         )
 
+    def get_base_url(self) -> str:
+        return f"{self.app_url}/"
+
 settings = Settings.initialize()

@@ -9,15 +9,15 @@ from _pytest.fixtures import SubRequest
 from tools.playwright.pages import initialize_playwright_page
 
 
-@pytest.fixture
-def chromium_page(request: SubRequest, playwright:Playwright):
-    yield from initialize_playwright_page(playwright, test_name = request.node.name, storage_stage = None)
+@pytest.fixture(params=settings.browser)
+def page(request: SubRequest, playwright:Playwright):
+    yield from initialize_playwright_page(playwright, test_name = request.node.name, storage_stage = None, browser_type=request.param)
 
 
 @pytest.fixture(scope="session")
 def initialize_browser_state(playwright:Playwright):
     brw = playwright.chromium.launch(headless=False)
-    context = brw.new_context()
+    context = brw.new_context(base_url=settings.get_base_url())
     page = context.new_page()
     registration_page = RegistrationPage(page = page)
     registration_page.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration")
@@ -25,7 +25,7 @@ def initialize_browser_state(playwright:Playwright):
     registration_page.click_registration_button()
     context.storage_state(path = settings.browser_state_file)
 
-@pytest.fixture
-def chromium_page_with_state(request: SubRequest, playwright:Playwright):
-    yield from initialize_playwright_page(playwright, test_name = request.node.name, storage_stage = settings.browser_state_file)
+@pytest.fixture(params=settings.browser)
+def page_with_state(request: SubRequest, playwright:Playwright):
+    yield from initialize_playwright_page(playwright, test_name = request.node.name, storage_stage = settings.browser_state_file, browser_type=request.param)
 

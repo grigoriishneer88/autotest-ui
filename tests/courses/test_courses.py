@@ -1,5 +1,7 @@
 import allure
 import pytest
+
+from config import settings
 from pages.courses.courses_list_page import CoursesPage
 from pages.courses.create_course_page import CreateCoursePage
 from tools.allure.parent_suites import AllureParentSuite
@@ -10,6 +12,8 @@ from tools.allure.epics import AllureEpic
 from tools.allure.stories import AllureStories
 from tools.allure.features import AllureFeature
 from allure_commons.types import Severity
+
+from tools.routes import AppRoute
 
 
 @pytest.mark.regression
@@ -39,7 +43,7 @@ class TestCourses:
         create_course_page.upload_image_widget.check_visible(is_image_uploaded=False)
 
         create_course_page.upload_image_widget.upload_preview_image(
-            '/Users/grigorii/PycharmProjects/autotests1/testdata/files/image.png')
+            settings.test_data.image_png_file)
         create_course_page.upload_image_widget.check_visible(is_image_uploaded=True)
         create_course_page.create_course_toolbar_view_component.click_create_course_button()
         courses_list_page.toolbar_view_component.check_create_course_button_visibility()
@@ -56,7 +60,7 @@ class TestCourses:
     @allure.title("Check empty courses list")
     @allure.tag(AllureTags.COURSES.value, AllureTags.REGRESSION.value)
     def test_empty_course_list(self, courses_list_page: CoursesPage):
-        courses_list_page.visit('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/courses')
+        courses_list_page.visit(AppRoute.COURSES)
         courses_list_page.navbar_component.check_nav_bar_visibility('test2')
         courses_list_page.check_empty_view_visibility()
         courses_list_page.empty_view.check_visible('There is no results',
@@ -76,7 +80,7 @@ class TestCourses:
         course_max_score = '89'
         course_min_score = '56'
         create_course_page.create_course_form_component.fill(title = course_title, estimated = course_estimated, description = course_description, max_score = course_max_score, min_score = course_min_score)
-        create_course_page.upload_image_widget.upload_preview_image('/Users/grigorii/PycharmProjects/autotests1/testdata/files/image.png')
+        create_course_page.upload_image_widget.upload_preview_image(settings.test_data.image_png_file)
         create_course_page.create_course_toolbar_view_component.click_create_course_button()
         courses_list_page.course_view.check_visible(index= 0, title = course_title, max_score = course_max_score, min_score=course_min_score, estimated_time=course_estimated)
         courses_list_page.course_view.menu.click_edit(index=0)

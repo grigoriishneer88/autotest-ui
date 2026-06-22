@@ -4,6 +4,10 @@ from components.navigation.navbar_component import NavbarComponent
 from components.side_bar_component import SideBarComponent
 from pages.base_page import BasePage
 from playwright.sync_api import Page, expect
+
+from tools.routes import AppRoute
+
+
 class DashboardPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
@@ -52,4 +56,4 @@ class DashboardPage(BasePage):
     #     self.check_if_visible(self.scores_chart)
 
     def visit_dashboard_page(self):
-        self.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard")
+        self.visit(AppRoute.DASHBOARD)
