@@ -3,6 +3,7 @@ import pytest
 from _pytest.fixtures import SubRequest
 from playwright.sync_api import Playwright, Page
 from config import settings, Browser
+from tools.playwright.mocks import mock_status_resources
 
 
 def initialize_playwright_page(playwright:Playwright, test_name:str, storage_stage:str | None, browser_type : Browser):
@@ -11,6 +12,7 @@ def initialize_playwright_page(playwright:Playwright, test_name:str, storage_sta
     context = browser.new_context(base_url=settings.get_base_url(), storage_state=storage_stage, record_video_dir=settings.videos_dir)
     context.tracing.start(screenshots=True, snapshots=True, sources=True)
     page = context.new_page()
+    mock_status_resources(page)
     yield page
     trace_file = settings.tracing_dir.joinpath(f'{test_name}.zip')
     context.tracing.stop(path=trace_file)
