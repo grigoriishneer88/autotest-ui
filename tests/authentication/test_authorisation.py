@@ -27,6 +27,7 @@ from tools.allure.features import AllureFeature
 @allure.feature(AllureFeature.AUTHENTICATION.value)
 @allure.story(AllureStories.AUTHORISATION.value)
 class TestAuthorisation:
+    @pytest.mark.xdist_group(name='authorisation-group')
     @pytest.mark.regression
     @pytest.mark.authorisation
     @pytest.mark.parametrize('email, password', [
