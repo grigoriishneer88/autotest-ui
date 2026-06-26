@@ -28,15 +28,9 @@ jobs:
           pip install -r requirements.txt
           playwright install --with-deps
 
-      # Шаг 1: Генерируем состояние строго в ОДИН поток (-n 0) и только для ОДНОГО браузера (chromium)
-      - name: Pre-generate browser state
-        run: xvfb-run pytest tests/authentication/test_authorisation.py -k "chromium" -n 0
-
-      # Шаг 2: Запускаем все остальные тесты параллельно в 2 процесса.
-      # Они увидят уже готовый файл сессии и пройдут успешно.
-      - name: Run remaining tests in parallel
+      - name: Run playwright tests with pytest and generate allure results
         run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
-          
+
       - name: Load Allure History from GitHub Pages
         uses: actions/checkout@v4
         if: always()
