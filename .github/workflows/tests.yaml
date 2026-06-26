@@ -28,9 +28,15 @@ jobs:
           pip install -r requirements.txt
           playwright install --with-deps
 
-      - name: Run playwright tests with pytest and generate allure results
-        run: |
-          pytest -m regression --alluredir=./allure-results -n 2
+      # Шаг 1: Запускаем ТОЛЬКО тест авторизации в один поток.
+      # Он гарантированно создаст файл сессии без конфликтов и race condition.
+      - name: Pre-generate browser state
+        run: xvfb-run pytest tests/authentication/test_authorisation.py
+
+      # Шаг 2: Запускаем все остальные тесты параллельно в 2 процесса.
+      # Они увидят уже готовый файл сессии и пройдут успешно.
+      - name: Run remaining tests in parallel
+        run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
           
       - name: Load Allure History from GitHub Pages
         uses: actions/checkout@v4
