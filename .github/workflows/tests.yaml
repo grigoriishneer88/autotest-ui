@@ -28,7 +28,30 @@ jobs:
           pip install -r requirements.txt
           playwright install --with-deps
 
-      - name: Run playwright tests with pytest and generate allure results
+# Шаг 1: Чистый скрипт на Python, который создаёт файл состояния в один поток
+      - name: Pre-generate browser state
+        run: |
+          python -c "
+          from playwright.sync_api import sync_playwright
+          import os
+          os.makedirs('tools/playwright', exist_ok=True)
+          with sync_playwright() as p:
+              browser = p.chromium.launch(headless=True)
+              context = browser.new_context()
+              page = context.new_page()
+              page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration')
+              page.locator('input[type=\"email\"]').fill('grigoriishneer88@gmail.com')
+              page.locator('input[type=\"password\"]').fill('твоя_пароль_из_settings')
+              page.locator('input[placeholder=\"Name\"]').fill('Gregory')
+              page.locator('button', has_text='Зарегистрироваться').click()
+              page.wait_for_load_state('networkidle')
+              context.storage_state(path='tools/playwright/storage_state.json')
+              context.close()
+              browser.close()
+          print('Storage state file successfully generated!')"
+
+      # Шаг 2: Спокойно запускаем все тесты параллельно
+      - name: Run remaining tests in parallel
         run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
 
       - name: Load Allure History from GitHub Pages
