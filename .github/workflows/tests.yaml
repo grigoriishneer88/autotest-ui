@@ -36,7 +36,7 @@ jobs:
       # Шаг 2: Запускаем все остальные тесты параллельно в 2 процесса.
       # Они увидят уже готовый файл сессии и пройдут успешно.
       - name: Run remaining tests in parallel
-        run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
+        run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=0
           
       - name: Load Allure History from GitHub Pages
         uses: actions/checkout@v4
