@@ -32,21 +32,26 @@ jobs:
         run: |
           pytest -m regression --alluredir=./allure-results -numprocesses 2 
           
-      - name: Get allure history
-        uses: actions/checkout@v3
+      - name: Load Allure History from GitHub Pages
+        uses: actions/checkout@v4
         if: always()
         continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
 
-      - name: Allure report action from marketplace
-        uses: simple-elf/allure-report-action@v1.7
+      - name: Install Allure CLI and Generate Report
         if: always()
-        with:
-          allure_results: allure-results
-          gh-pages: gh-pages
-          allure_history: allure-history
+        run: |
+          sudo wget https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.tgz
+          sudo tar -zxvf allure-2.24.0.tgz -C /opt/
+          sudo ln -s /opt/allure-2.24.0/bin/allure /usr/bin/allure
+          
+          if [ -d "gh-pages/history" ]; then
+            cp -r gh-pages/history ./allure-results/
+          fi
+          
+          allure generate ./allure-results --clean -o ./allure-history
 
       - name: Deploy on GitHub pages
         uses: peaceiris/actions-gh-pages@v2
