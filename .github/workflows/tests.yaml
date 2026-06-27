@@ -32,15 +32,12 @@ jobs:
       - name: Run playwright tests with pytest and generate allure results
         run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
 
-      #фывфыв Безопасно вытягиваем историю через нативный git без падения пайплайна
+      # Безопасно вытягиваем историю через нативный git без падения пайплайна
       - name: Load Allure History
         if: always()
         run: |
           mkdir -p allure-results
-          # Клонируем ветку gh-pages. Если её нет, оператор || true предотвратит падение шага
           git clone --branch gh-pages --single-branch https://github.com/${{ github.repository }}.git gh-pages-dir || true
-          
-          # Если папка с историей существует — переносим её к текущим результатам
           if [ -d "gh-pages-dir/history" ]; then
             cp -r gh-pages-dir/history ./allure-results/
           fi
@@ -51,6 +48,16 @@ jobs:
           sudo wget https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.tgz
           sudo tar -zxvf allure-2.24.0.tgz -C /opt/
           sudo ln -s /opt/allure-2.24.0/bin/allure /usr/bin/allure
+          
+          # УДАЛЯЕМ АРТЕФАКТЫ УСПЕШНЫХ ТЕСТОВ ПЕРЕД СБОРКОЙ:
+          # Ищем файлы-результаты (*-result.json), у которых статус "passed".
+          # Находим связанные с ними uuid и удаляем соответствующие тяжелые файлы (attachments) видео и трейсов.
+          if [ -d "allure-results" ]; then
+            grep -l '"status": "passed"' allure-results/*-result.json | while read -r file; do
+              uuid=$(basename "$file" "-result.json")
+              rm -f allure-results/${uuid}-attachment.* || true
+            done
+          fi
           
           allure generate ./allure-results --clean -o ./allure-history
 
