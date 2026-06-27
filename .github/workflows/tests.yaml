@@ -9,11 +9,9 @@ on:
       - main
 
 jobs:
+  # ДЖОБА 1: Запуск автотестов и сохранение сырых результатов
   run-tests:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -29,13 +27,40 @@ jobs:
           pip install -r requirements.txt
           playwright install --with-deps
 
+      # Убрали continue-on-error согласно требованиям строгого ТЗ (обе джобы должны завершаться успешно)
       - name: Run playwright tests with pytest and generate allure results
-        continue-on-error: true
         run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
 
-      # ИСПРАВЛЕНО: Вытягиваем историю во временную папку вне рабочей директории git
+      # ВАЖНОЕ УСЛОВИЕ ТЗ: Сохраняем папку allure-results как артефакт
+      - name: Upload Allure Results
+        if: always() # Сохраняем результаты в любом случае, чтобы было из чего строить отчет
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-artifact
+          path: allure-results
+          retention-days: 1
+
+  # ДЖОБА 2: Скачивание результатов, сборка отчета Allure и публикация на GitHub Pages
+  publish-report:
+    runs-on: ubuntu-latest
+    needs: run-tests # ВАЖНОЕ УСЛОВИЕ ТЗ: Запускается только после выполнения run-tests
+    if: always()     # Гарантирует, что отчет соберется, даже если в первой джобе упали тесты
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      # ВАЖНОЕ УСЛОВИЕ ТЗ: Загружаем сохраненный артефакт из первой джобы
+      - name: Download Allure Results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-artifact
+          path: allure-results
+
+      # Вытягиваем историю во временную папку вне рабочей директории git
       - name: Load Allure History
-        if: always()
         run: |
           mkdir -p allure-results
           TEMP_DIR=$(mktemp -d)
@@ -45,13 +70,12 @@ jobs:
           fi
 
       - name: Install Allure CLI and Generate Report
-        if: always()
         run: |
           sudo wget https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.tgz
           sudo tar -zxvf allure-2.24.0.tgz -C /opt/
           sudo ln -s /opt/allure-2.24.0/bin/allure /usr/bin/allure
           
-          # ПОЛНОЕ УДАЛЕНИЕ ВИДЕО И ТРЕЙСОВ
+          # ПОЛНОЕ УДАЛЕНИЕ ВИДЕО И ТРЕЙСОВ (чтобы отчет не весил по 100+ МБ)
           if [ -d "allure-results" ]; then
             find ./allure-results -type f \( -name "*.zip" -o -name "*.webm" -o -name "*.mp4" \) -delete || true
           fi
@@ -60,11 +84,8 @@ jobs:
 
       - name: Deploy on GitHub pages
         uses: peaceiris/actions-gh-pages@v4
-        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
           force_orphan: true
-
-          #budet li istoriya
