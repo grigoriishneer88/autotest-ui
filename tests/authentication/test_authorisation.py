@@ -15,7 +15,7 @@ from tools.allure.epics import AllureEpic
 from tools.allure.stories import AllureStories
 from tools.allure.features import AllureFeature
 
-
+@pytest.mark.xdist_group(name='authorisation-group')
 @allure.parent_suite(AllureParentSuite.LMS.value)
 @allure.suite(AllureSuite.AUTHENTICATION.value)
 @allure.sub_suite(AllureSubSuite.AUTHORISATION.value)

@@ -2,6 +2,7 @@ import allure
 import os
 import pytest
 from playwright.sync_api import sync_playwright, Page, Playwright
+from sqlalchemy import true
 
 from config import settings
 from pages.authentication.registration_page import RegistrationPage
