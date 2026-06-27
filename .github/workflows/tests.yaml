@@ -1,4 +1,4 @@
-name : UI tests
+name: UI tests
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
   pull_request:
     branches:
       - main
-
 
 jobs:
   run-tests:
@@ -33,13 +32,24 @@ jobs:
       - name: Run playwright tests with pytest and generate allure results
         run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
 
-      - name: Load Allure History from GitHub Pages
+      # Пытаемся скачать ветку gh-pages в отдельную папку. Если ветки нет — идем дальше.
+      - name: Load Allure History
         uses: actions/checkout@v4
         if: always()
         continue-on-error: true
         with:
           ref: gh-pages
-          path: gh-pages
+          path: gh-pages-dir
+
+      # Создаем структуру папок и безопасно копируем историю (даже если ветки еще не существовало)
+      - name: Environment Preparation for Allure
+        if: always()
+        run: |
+          mkdir -p allure-results
+          mkdir -p gh-pages-dir/history
+          if [ -d "gh-pages-dir/history" ]; then
+            cp -r gh-pages-dir/history ./allure-results/ || true
+          fi
 
       - name: Install Allure CLI and Generate Report
         if: always()
@@ -48,15 +58,12 @@ jobs:
           sudo tar -zxvf allure-2.24.0.tgz -C /opt/
           sudo ln -s /opt/allure-2.24.0/bin/allure /usr/bin/allure
           
-          if [ -d "gh-pages-dir/history" ]; then
-            cp -r gh-pages-dir/history ./allure-results/
-          fi
-          
           allure generate ./allure-results --clean -o ./allure-history
 
       - name: Deploy on GitHub pages
         uses: peaceiris/actions-gh-pages@v4
-        env:
+        if: always()
+        with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
+          publish_branch: gh-pages
+          publish_dir: allure-history
