@@ -58,7 +58,6 @@ jobs:
           
           allure generate ./allure-results --clean -o ./allure-history
 
-      # Теперь пуш пойдет строго в gh-pages без пересечения с локальными ветками
       - name: Deploy on GitHub pages
         uses: peaceiris/actions-gh-pages@v4
         if: always()
