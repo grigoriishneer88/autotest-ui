@@ -32,23 +32,17 @@ jobs:
       - name: Run playwright tests with pytest and generate allure results
         run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
 
-      # Пытаемся скачать ветку gh-pages в отдельную папку. Если ветки нет — идем дальше.
+      # Безопасно вытягиваем историю через нативный git без падения пайплайна
       - name: Load Allure History
-        uses: actions/checkout@v4
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages-dir
-
-      # Создаем структуру папок и безопасно копируем историю (даже если ветки еще не существовало)
-      - name: Environment Preparation for Allure
         if: always()
         run: |
           mkdir -p allure-results
-          mkdir -p gh-pages-dir/history
+          # Клонируем ветку gh-pages. Если её нет, оператор || true предотвратит падение шага
+          git clone --branch gh-pages --single-branch https://github.com/${{ github.repository }}.git gh-pages-dir || true
+          
+          # Если папка с историей существует — переносим её к текущим результатам
           if [ -d "gh-pages-dir/history" ]; then
-            cp -r gh-pages-dir/history ./allure-results/ || true
+            cp -r gh-pages-dir/history ./allure-results/
           fi
 
       - name: Install Allure CLI and Generate Report
