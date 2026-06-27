@@ -33,14 +33,15 @@ jobs:
         continue-on-error: true
         run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
 
-      # Безопасно вытягиваем историю через нативный git
+      # ИСПРАВЛЕНО: Вытягиваем историю во временную папку вне рабочей директории git
       - name: Load Allure History
         if: always()
         run: |
           mkdir -p allure-results
-          git clone --branch gh-pages --single-branch https://github.com/${{ github.repository }}.git gh-pages-dir || true
-          if [ -d "gh-pages-dir/history" ]; then
-            cp -r gh-pages-dir/history ./allure-results/
+          TEMP_DIR=$(mktemp -d)
+          git clone --branch gh-pages --single-branch https://github.com/${{ github.repository }}.git "$TEMP_DIR" || true
+          if [ -d "$TEMP_DIR/history" ]; then
+            cp -r "$TEMP_DIR/history" ./allure-results/
           fi
 
       - name: Install Allure CLI and Generate Report
@@ -50,15 +51,14 @@ jobs:
           sudo tar -zxvf allure-2.24.0.tgz -C /opt/
           sudo ln -s /opt/allure-2.24.0/bin/allure /usr/bin/allure
           
-          # ПОЛНОЕ УДАЛЕНИЕ ВИДЕО И ТРЕЙСОВ:
-          # Вырезаем абсолютно все .zip, .webm и .mp4 файлы из результатов,
-          # оставляя только текстовые логи, шаги тестов и чистые скриншоты.
+          # ПОЛНОЕ УДАЛЕНИЕ ВИДЕО И ТРЕЙСОВ
           if [ -d "allure-results" ]; then
             find ./allure-results -type f \( -name "*.zip" -o -name "*.webm" -o -name "*.mp4" \) -delete || true
           fi
           
           allure generate ./allure-results --clean -o ./allure-history
 
+      # Теперь пуш пойдет строго в gh-pages без пересечения с локальными ветками
       - name: Deploy on GitHub pages
         uses: peaceiris/actions-gh-pages@v4
         if: always()
@@ -67,4 +67,3 @@ jobs:
           publish_branch: gh-pages
           publish_dir: allure-history
           force_orphan: true
-#jbhdfjbsdjkfbgsj
