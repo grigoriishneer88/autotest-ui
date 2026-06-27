@@ -66,3 +66,5 @@ jobs:
           publish_branch: gh-pages
           publish_dir: allure-history
           force_orphan: true
+
+          #budet li istoriya
