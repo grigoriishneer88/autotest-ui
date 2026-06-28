@@ -31,6 +31,33 @@ jobs:
       - name: Run playwright tests with pytest and generate allure results
         run: xvfb-run pytest -m regression --alluredir=./allure-results --numprocesses=2
 
+      - name: Restore Coveage History
+        uses: actions/cache/restore@v4
+        with:
+          path: coverage-history.json
+          key: coverage-history-${{ github.run-id }}
+          restore-keys: |
+            coverage-history-
+
+      - name: Generate coverage report
+        run: |
+          ui-coverage-tool save-report
+
+      - name: Cache coverage history
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: coverage-history.json
+          key: coverage-history-${{ github.run_id }}
+
+      - name: Upload coverage Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.html
+          retention-days: 1
+
       # ВАЖНОЕ УСЛОВИЕ ТЗ: Сохраняем папку allure-results как артефакт
       - name: Upload Allure Results
         if: always() # Сохраняем результаты в любом случае, чтобы было из чего строить отчет
@@ -39,6 +66,8 @@ jobs:
           name: allure-results-artifact
           path: allure-results
           retention-days: 1
+
+
 
   # ДЖОБА 2: Скачивание результатов, сборка отчета Allure и публикация на GitHub Pages
   publish-report:

@@ -12,3 +12,7 @@ allure-report
 videos
 tracing
 !/browser-state.json
+coverage.html
+coverage-results.json
+coverage-report.json
+coverage-history.json
