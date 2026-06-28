@@ -1,0 +1,10 @@
+INFO     page:base_page.py:17 Opening URL ./#/auth/login
+INFO     page:base_element.py:20 Getting locator with "data-testid=login-page-registration-link" at index" 0"
+INFO     page:base_element.py:27 Clicking link with name Registration and "data-testid=<Locator frame=<Frame name= url='https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/login'> selector='internal:testid=[data-testid="login-page-registration-link"s] >> nth=0'>" at index" 0"
+INFO     page:base_page.py:35 Checking that current URL matches the URL .*/#/auth/registration
+INFO     page:base_element.py:20 Getting locator with "data-testid=registration-form-email-input" at index" 0"
+INFO     page:base_element.py:36 Checking <bound method Input.type_of of <elements.input.Input object at 0x7f9a3650d310>> with name email is VISIBLE and "data-testid=<Locator frame=<Frame name= url='https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration'> selector='internal:testid=[data-testid="registration-form-email-input"s] >> nth=0 >> input'>" at index" 0"
+INFO     page:base_element.py:20 Getting locator with "data-testid=registration-form-username-input" at index" 0"
+INFO     page:base_element.py:36 Checking <bound method Input.type_of of <elements.input.Input object at 0x7f9a3650dc10>> with name name is VISIBLE and "data-testid=<Locator frame=<Frame name= url='https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration'> selector='internal:testid=[data-testid="registration-form-username-input"s] >> nth=0 >> input'>" at index" 0"
+INFO     page:base_element.py:20 Getting locator with "data-testid=registration-form-password-input" at index" 0"
+INFO     page:base_element.py:36 Checking <bound method Input.type_of of <elements.input.Input object at 0x7f9a3650ffb0>> with name password is VISIBLE and "data-testid=<Locator frame=<Frame name= url='https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration'> selector='internal:testid=[data-testid="registration-form-password-input"s] >> nth=0 >> input'>" at index" 0"
